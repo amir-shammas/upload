@@ -47,6 +47,12 @@ export default function UserPanelSidebar() {
               ویرایش عکس پروفایل
             </Link>
           </li>
+
+          <li className="sidebar__item">
+            <Link className={location.pathname==="/my-account/upload-resume" ? "sidebar__link active" : "sidebar__link"} to="upload-resume">
+              بارگزاری رزومه
+            </Link>
+          </li>
           
         </ul>
       </div>

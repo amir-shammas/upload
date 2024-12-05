@@ -12,6 +12,7 @@ import UserPanelVerifyEmail from "./pages/UserPanel/UserPanelVerifyEmail/UserPan
 import UserPanelEditAccount from "./pages/UserPanel/UserPanelEditAccount/UserPanelEditAccount";
 import UserPanelChangePassword from "./pages/UserPanel/UserPanelChangePassword/UserPanelChangePassword";
 import UserPanelUpdateAvatar from "./pages/UserPanel/UserPanelUpdateAvatar/UserPanelUpdateAvatar";
+import UserPanelUploadResume from "./pages/UserPanel/UserPanelUploadResume/UserPanelUploadResume";
 
 
 const routes = [
@@ -36,6 +37,7 @@ const routes = [
       {path: "edit-account", element: <UserPanelEditAccount />},
       {path: "change-password", element: <UserPanelChangePassword />},
       {path: "update-avatar", element: <UserPanelUpdateAvatar />},
+      {path: "upload-resume", element: <UserPanelUploadResume />},
     ],
    },
 
