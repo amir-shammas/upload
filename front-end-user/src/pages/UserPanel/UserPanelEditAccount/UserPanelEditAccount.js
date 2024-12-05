@@ -105,27 +105,14 @@ function UserPanelEditAccount() {
         if (!res.ok) throw new Error('Failed to update user!');
         return res.json();
       })
-      .then(() => {
-        // Fetch updated user information
-        return fetch("http://localhost:4000/auth/me", {
-          headers: {
-            "Authorization": `Bearer ${loggedInUser.token}`,
-          },
-        });
+      .then((result) => {
+        // console.log(result);
+        authContext.setUserInfos(result.data)
       })
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to update user!');
-        return res.json();
-      })
-      .then((updatedUser) => {
-        // console.log(updatedUser);
-        // Update the global context with new user information
-        authContext.login(updatedUser, loggedInUser.token);
-        swal({
-          title: "ویرایش کاربر با موفقیت انجام شد",
-          icon: "success",
-          buttons: "باشه",
-        });
+      swal({
+        title: "ویرایش کاربر با موفقیت انجام شد",
+        icon: "success",
+        buttons: "باشه",
       })
       .catch((err) => {
         swal({
@@ -135,12 +122,6 @@ function UserPanelEditAccount() {
         });
       });
   }
-
-  // useEffect(() => {
-  //   setEditedUserName(authContext.userInfos.name);
-  //   setEditedUserUsername(authContext.userInfos.username);
-  //   setEditedUserEmail(authContext.userInfos.email);
-  // }, [authContext.userInfos.name , authContext.userInfos.username , authContext.userInfos.email ]);
 
 
   useEffect(() => {

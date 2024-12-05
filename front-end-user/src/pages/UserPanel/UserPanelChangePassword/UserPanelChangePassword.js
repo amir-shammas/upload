@@ -163,12 +163,16 @@ function UserPanelChangePassword() {
           }
           else{
             return res.json()
+            .then((result) => {
+              // console.log(result);
+              authContext.setUserInfos(result.data)
+            })
             .then(() => {
                 swal({
                   title: "تغییر رمز عبور کاربر با موفقیت انجام شد",
                   icon: "success",
                   buttons: "باشه",
-                });
+                })
               })
             .then(() => {
               setEditedUserCurrentPassword("");

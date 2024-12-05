@@ -12,8 +12,6 @@ export default function Navbar() {
 
   const navigate = useNavigate();
 
-  // const [avatarUrl, setAvatarUrl] = useState("/images/default-avatar.png");
-
   const logoutHandler = (e) => {
     e.preventDefault();
     
