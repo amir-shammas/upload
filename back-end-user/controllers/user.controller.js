@@ -36,7 +36,8 @@ exports.updateUser = async (req, res, next) => {
         name,
         username,
         email,
-      }
+      },
+      { new: true }, // This option returns the updated document
     );
 
     if (!user) {
@@ -83,7 +84,8 @@ exports.changeUserPassword = async (req, res, next) => {
       id,
       {
         password: hashedPassword,
-      }
+      },
+      { new: true }, // This option returns the updated document
     );
 
     if (!user) {
@@ -215,7 +217,8 @@ exports.updateAvatar = async (req, res, next) => {
       {
         avatarName: fileName,
         avatarUrl: url,
-      }
+      },
+      { new: true }, // This option returns the updated document
     );
 
     if (!user) {

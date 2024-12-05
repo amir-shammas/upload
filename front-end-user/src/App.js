@@ -85,6 +85,7 @@ export default function App() {
         isLoggedIn,
         token,
         userInfos,
+        setUserInfos,
         login,
         logout,
       }}

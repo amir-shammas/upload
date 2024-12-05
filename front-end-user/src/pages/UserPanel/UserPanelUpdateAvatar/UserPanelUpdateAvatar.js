@@ -86,11 +86,15 @@ function UserPanelUpdateAvatar() {
             };
 
             await response.json()
+                .then((result) => {
+                    // console.log(result);
+                    authContext.setUserInfos(result.data)
+                });
             swal({
                 title: "ویرایش عکس پروفایل کاربر با موفقیت انجام شد",
                 icon: "success",
                 buttons: "باشه",
-            })
+            });
 
         } catch (error) {
             console.log(error);
