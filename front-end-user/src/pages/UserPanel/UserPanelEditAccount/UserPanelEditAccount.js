@@ -1,12 +1,25 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext } from "react";
 import * as Yup from 'yup';
 import swal from "sweetalert";
 import AuthContext from "../../../context/authContext";
+import { useFormik } from "formik";
 
 import "./UserPanelEditAccount.css";
 
 
 const validationSchemaForEditUser = Yup.object().shape({
+  name: Yup
+    .string()
+    .transform(value => value.trim())
+    .min(3, "نام حداقل باید 3 کاراکتر باشد")
+    .max(6, "نام حداکثر باید 6 کاراکتر باشد")
+    .required("نام و نام خانوادگی الزامی است"),
+  username: Yup
+    .string()
+    .transform(value => value.trim())
+    .min(4, "نام کاربری حداقل باید 4 کاراکتر باشد")
+    .max(7, "نام کاربری حداکثر باید 7 کاراکتر باشد")
+    .required("نام کاربری الزامی است"),
   email: Yup
     .string()
     .transform(value => value.trim())
@@ -14,18 +27,6 @@ const validationSchemaForEditUser = Yup.object().shape({
     .min(10, "ایمیل حداقل باید 10 کاراکتر باشد")
     .max(15, "ایمیل حداکثر باید 15 کاراکتر باشد")
     .required("ایمیل الزامی است"),
-  username: Yup
-    .string()
-    .transform(value => value.trim())
-    .min(4, "نام کاربری حداقل باید 4 کاراکتر باشد")
-    .max(7, "نام کاربری حداکثر باید 7 کاراکتر باشد")
-    .required("نام کاربری الزامی است"),
-  name: Yup
-    .string()
-    .transform(value => value.trim())
-    .min(3, "نام حداقل باید 3 کاراکتر باشد")
-    .max(6, "نام حداکثر باید 6 کاراکتر باشد")
-    .required("نام و نام خانوادگی الزامی است"),
 });
 
 
@@ -35,34 +36,29 @@ function UserPanelEditAccount() {
 
   const authContext = useContext(AuthContext);
 
-  const [editedUserName, setEditedUserName] = useState("");
-  const [editedUserUsername, setEditedUserUsername] = useState("");
-  const [editedUserEmail, setEditedUserEmail] = useState("");
+  const form = useFormik({
 
-  const [errorsForEditUser, setErrorsForEditUser] = useState({});
+    initialValues: {
+      name: authContext.userInfos.name,
+      username: authContext.userInfos.username,
+      email: authContext.userInfos.email,
+    },
 
-  const validateInputsForEditUser = async () => {
-    try {
-      await validationSchemaForEditUser.validate({
-        name: editedUserName,
-        username: editedUserUsername,
-        email: editedUserEmail,
-      });
-      setErrorsForEditUser({}); // Clear errors if validation passes
-      return true; // Validation passed
-    } catch (err) {
-      setErrorsForEditUser({
-        name: err.path === 'name' ? err.message : undefined,
-        username: err.path === 'username' ? err.message : undefined,
-        email: err.path === 'email' ? err.message : undefined,
-      });
-      return false; // Validation failed
-    }
-  }
+    onSubmit: (values, { setSubmitting }) => {
 
-  const editUserHandler = async (e) => {
+      editUserHandler(values);
 
-    e.preventDefault();
+      setTimeout(() => {
+        setSubmitting(false);
+      }, 500);
+
+    },
+
+    validationSchema: validationSchemaForEditUser,
+
+  });
+
+  const editUserHandler = (values) => {
 
     if(authContext.userInfos.isBan){
       swal({
@@ -82,15 +78,10 @@ function UserPanelEditAccount() {
       return;
     }
 
-    const isValidInputsForEditUser = await validateInputsForEditUser();
-    if (!isValidInputsForEditUser) {
-      return; // Stop the submission if validation fails
-    }
-
     const editedUser = {
-      name: editedUserName,
-      username: editedUserUsername,
-      email: editedUserEmail,
+      name: values.name,
+      username: values.username,
+      email: values.email,
     };
 
     fetch("http://localhost:4000/users/update-user", {
@@ -124,17 +115,9 @@ function UserPanelEditAccount() {
   }
 
 
-  useEffect(() => {
-    // Ensure we are safely reading from authContext.userInfos
-    setEditedUserName(authContext.userInfos?.name || "");
-    setEditedUserUsername(authContext.userInfos?.username || "");
-    setEditedUserEmail(authContext.userInfos?.email || "");
-  }, [authContext.userInfos])
-
-
   return (
     <div className="edit">
-      <form className="edit__form" action="#">
+      <form className="edit__form" onSubmit={form.handleSubmit}>
         <div className="edit__personal">
           <div className="row">
 
@@ -143,10 +126,14 @@ function UserPanelEditAccount() {
               <input
                 className="edit__input"
                 type="text"
-                value={editedUserName}
-                onChange={(e) => setEditedUserName(e.target.value)}
+                name="name"
+                value={form.values.name}
+                onChange={form.handleChange}
+                onBlur={form.handleBlur}
               />
-              {errorsForEditUser.name && <div className="error-message">{errorsForEditUser.name}</div>}
+            </div>
+            <div className="error-message">
+              {form.errors.name && form.touched.name && form.errors.name}
             </div>
 
             <div className="col-12">
@@ -154,10 +141,14 @@ function UserPanelEditAccount() {
               <input
                 className="edit__input"
                 type="text"
-                value={editedUserUsername}
-                onChange={(e) => setEditedUserUsername(e.target.value)}
+                name="username"
+                value={form.values.username}
+                onChange={form.handleChange}
+                onBlur={form.handleBlur}
               />
-              {errorsForEditUser.username && <span className="error-message">{errorsForEditUser.username}</span>}
+            </div>
+            <div className="error-message">
+              {form.errors.username && form.touched.username && form.errors.username}
             </div>
 
             <div className="col-12">
@@ -165,18 +156,23 @@ function UserPanelEditAccount() {
               <input
                 className="edit__input"
                 type="text"
-                value={editedUserEmail}
-                onChange={(e) => setEditedUserEmail(e.target.value)}
+                name="email"
+                value={form.values.email}
+                onChange={form.handleChange}
+                onBlur={form.handleBlur}
               />
-              {errorsForEditUser.email && <span className="error-message">{errorsForEditUser.email}</span>}
+            </div>
+            <div className="error-message">
+              {form.errors.email && form.touched.email && form.errors.email}
             </div>
 
           </div>
         </div>
 
-        <button className="edit__btn" type="submit" onClick={editUserHandler}>
-          ذخیره تغییرات
+        <button className="edit__btn" type="submit">
+          {form.isSubmitting ? "در حال ارسال ..." : "ذخیره تغییرات"}
         </button>
+
       </form>
     </div>
   );

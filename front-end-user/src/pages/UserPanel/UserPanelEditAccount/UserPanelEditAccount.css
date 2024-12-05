@@ -42,9 +42,11 @@
     font-weight: bold;
     padding: 0.7rem 1rem;
     transition: all 400ms ease;
+    cursor: pointer;
   }
   .edit__btn:hover {
     background-color: #33be58;
   }
+
   /* ============================== Content Main Style ============================== */
   
