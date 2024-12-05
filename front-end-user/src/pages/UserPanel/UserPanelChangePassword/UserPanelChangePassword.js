@@ -2,6 +2,7 @@ import React, { useState , useContext } from "react";
 import * as Yup from 'yup';
 import swal from "sweetalert";
 import AuthContext from "../../../context/authContext";
+import { useFormik } from "formik";
 
 import { Icon } from 'react-icons-kit';
 import {eye} from 'react-icons-kit/feather/eye';
@@ -11,29 +12,31 @@ import "./UserPanelChangePassword.css";
 
 
 const validationSchemaForChangeUserPassword = Yup.object().shape({
-  confirmPassword: Yup
+  currentPassword: Yup
     .string()
     .transform(value => value.trim())
-    .required("تکرار کلمه عبور الزامی است")
-    .oneOf([Yup.ref('password'), null], "کلمه عبور و تکرار آن باید یکسان باشند"),
+    .required("کلمه عبور فعلی الزامی است"),
   password: Yup
     .string()
     .transform(value => value.trim())
-    .required("کلمه عبور الزامی است")
+    .required("کلمه عبور جدید الزامی است")
     .min(8, "کلمه عبور حداقل باید 8 کاراکتر باشد")
     .max(10, "کلمه عبور حداکثر باید 10 کاراکتر باشد")
     .matches(/[a-z]/, "کلمه عبور حداقل باید شامل یک حرف کوچک باشد")
     .matches(/[A-Z]/, "کلمه عبور حداقل باید شامل یک حرف بزرگ باشد")
     .matches(/[0-9]/, "کلمه عبور حداقل باید شامل یک عدد باشد")
     .matches(/[^a-zA-Z0-9]/, "کلمه عبور حداقل باید شامل یک کاراکتر خاص باشد"),
-  currentPassword: Yup
+  confirmPassword: Yup
     .string()
     .transform(value => value.trim())
-    .required("کلمه عبور فعلی الزامی است"),
+    .required("تکرار کلمه عبور جدید الزامی است")
+    .oneOf([Yup.ref('password'), null], "کلمه عبور و تکرار آن باید یکسان باشند"),
 });
 
 
 function UserPanelChangePassword() {
+
+  const loggedInUser = JSON.parse(localStorage.getItem("user")) || JSON.parse(sessionStorage.getItem("user"));
 
   const authContext = useContext(AuthContext);
 
@@ -44,15 +47,13 @@ function UserPanelChangePassword() {
   const [confirmPasswordInputType, setConfirmPasswordInputType] = useState("password");
   const [confirmPasswordIcon, setConfirmPasswordIcon] = useState(eyeOff);
   
-  const loggedInUser = JSON.parse(localStorage.getItem("user")) || JSON.parse(sessionStorage.getItem("user"));
-  
-  const [editedUserCurrentPassword, setEditedUserCurrentPassword] = useState("");
-  const [editedUserPassword, setEditedUserPassword] = useState("");
-  const [editedUserConfirmPassword, setEditedUserConfirmPassword] = useState("");
+  // const [editedUserCurrentPassword, setEditedUserCurrentPassword] = useState("");
+  // const [editedUserPassword, setEditedUserPassword] = useState("");
+  // const [editedUserConfirmPassword, setEditedUserConfirmPassword] = useState("");
 
-  const [errorsForCurrentPassword, setErrorsForCurrentPassword] = useState({});
-  const [errorsForChangeUserPassword, setErrorsForChangeUserPassword] = useState({});
-  const [errorsForChangeUserConfirmPassword, setErrorsForChangeUserConfirmPassword] = useState({});
+  // const [errorsForCurrentPassword, setErrorsForCurrentPassword] = useState({});
+  // const [errorsForChangeUserPassword, setErrorsForChangeUserPassword] = useState({});
+  // const [errorsForChangeUserConfirmPassword, setErrorsForChangeUserConfirmPassword] = useState({});
 
   const passwordInputHandler = () => {
     if(passwordInputType === "password"){
@@ -84,36 +85,56 @@ function UserPanelChangePassword() {
     }
   }
 
-  const validateInputsForChangeUserPassword = async () => {
-    try {
-      await validationSchemaForChangeUserPassword.validate({
-        currentPassword: editedUserCurrentPassword,
-        password: editedUserPassword,
-        confirmPassword: editedUserConfirmPassword,
-      });
-      setErrorsForCurrentPassword({}); // Clear errors if validation passes
-      setErrorsForChangeUserPassword({}); // Clear errors if validation passes
-      setErrorsForChangeUserConfirmPassword({}); // Clear errors if validation passes
-      return true; // Validation passed
-    } catch (err) {
-      setErrorsForCurrentPassword({
-        currentPassword: err.path === 'currentPassword' ? err.message : undefined,
-      });
-      setErrorsForChangeUserPassword({
-        password: err.path === 'password' ? err.message : undefined,
-      });
-      setErrorsForChangeUserConfirmPassword({
-        confirmPassword: err.path === 'confirmPassword' ? err.message : undefined,
-      });
-      return false; // Validation failed
-    }
-  }
+  // const validateInputsForChangeUserPassword = async () => {
+  //   try {
+  //     await validationSchemaForChangeUserPassword.validate({
+  //       currentPassword: editedUserCurrentPassword,
+  //       password: editedUserPassword,
+  //       confirmPassword: editedUserConfirmPassword,
+  //     });
+  //     setErrorsForCurrentPassword({}); // Clear errors if validation passes
+  //     setErrorsForChangeUserPassword({}); // Clear errors if validation passes
+  //     setErrorsForChangeUserConfirmPassword({}); // Clear errors if validation passes
+  //     return true; // Validation passed
+  //   } catch (err) {
+  //     setErrorsForCurrentPassword({
+  //       currentPassword: err.path === 'currentPassword' ? err.message : undefined,
+  //     });
+  //     setErrorsForChangeUserPassword({
+  //       password: err.path === 'password' ? err.message : undefined,
+  //     });
+  //     setErrorsForChangeUserConfirmPassword({
+  //       confirmPassword: err.path === 'confirmPassword' ? err.message : undefined,
+  //     });
+  //     return false; // Validation failed
+  //   }
+  // }
 
-  const changeUserPasswordHandler = async (e) => {
+  const form = useFormik({
+
+    initialValues: {
+      currentPassword: "",
+      password: "",
+      confirmPassword: "",
+    },
+
+    onSubmit: (values, { setSubmitting }) => {
+
+      changeUserPasswordHandler(values);
+
+      setTimeout(() => {
+        setSubmitting(false);
+      }, 500);
+
+    },
+
+    validationSchema: validationSchemaForChangeUserPassword,
+
+  });
+
+  const changeUserPasswordHandler = (values) => {
 
     try{
-
-      e.preventDefault();
 
       if(authContext.userInfos.isBan){
         swal({
@@ -133,15 +154,10 @@ function UserPanelChangePassword() {
         return;
       }
 
-      const isValidInputsForChangeUserPassword = await validateInputsForChangeUserPassword();
-      if (!isValidInputsForChangeUserPassword) {
-        return; // Stop the submission if validation fails
-      }
-
       const editedUser = {
-        currentPassword: editedUserCurrentPassword,
-        password: editedUserPassword,
-        confirmPassword: editedUserConfirmPassword,
+        currentPassword: values.currentPassword,
+        password: values.password,
+        confirmPassword: values.confirmPassword,
       };
 
       fetch("http://localhost:4000/users/change-password", {
@@ -162,6 +178,7 @@ function UserPanelChangePassword() {
             throw new Error('current password is not correct !');
           }
           else{
+            if (!res.ok) throw new Error('Failed to change user password !');
             return res.json()
             .then((result) => {
               // console.log(result);
@@ -174,11 +191,11 @@ function UserPanelChangePassword() {
                   buttons: "باشه",
                 })
               })
-            .then(() => {
-              setEditedUserCurrentPassword("");
-              setEditedUserPassword("");
-              setEditedUserConfirmPassword("");
-            })
+            // .then(() => {
+            //   setEditedUserCurrentPassword("");
+            //   setEditedUserPassword("");
+            //   setEditedUserConfirmPassword("");
+            // })
           }
         })
 
@@ -195,7 +212,7 @@ function UserPanelChangePassword() {
 
   return (
     <div className="edit">
-      <form className="edit__form" action="#">
+      <form className="edit__form" onSubmit={form.handleSubmit}>
         <div className="edit__personal">
           <div className="row">
 
@@ -204,14 +221,17 @@ function UserPanelChangePassword() {
               <div className="user-panel__password">
                 <input
                   className="edit__input"
-                  // type="text"
                   type={currentPasswordInputType}
-                  value={editedUserCurrentPassword}
-                  onChange={(e) => setEditedUserCurrentPassword(e.target.value)}
+                  name="currentPassword"
+                  value={form.values.currentPassword}
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
                 />
                 <span className="user-panel__password-icon" onClick={currentPasswordInputHandler} ><Icon icon={currentPasswordIcon} size={25} /></span>
               </div>
-              {errorsForCurrentPassword.currentPassword && <span className="error-message">{errorsForCurrentPassword.currentPassword}</span>}
+              <div className="error-message">
+                {form.errors.currentPassword && form.touched.currentPassword && form.errors.currentPassword}
+              </div>
             </div>
 
             <div className="col-12">
@@ -219,14 +239,17 @@ function UserPanelChangePassword() {
               <div className="user-panel__password">
                 <input
                   className="edit__input"
-                  // type="text"
                   type={passwordInputType}
-                  value={editedUserPassword}
-                  onChange={(e) => setEditedUserPassword(e.target.value)}
+                  name="password"
+                  value={form.values.password}
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
                 />
                 <span className="user-panel__password-icon" onClick={passwordInputHandler} ><Icon icon={passwordIcon} size={25} /></span>
             </div>
-              {errorsForChangeUserPassword.password && <span className="error-message">{errorsForChangeUserPassword.password}</span>}
+            <div className="error-message">
+              {form.errors.password && form.touched.password && form.errors.password}
+            </div>
             </div>
 
             <div className="col-12">
@@ -234,21 +257,24 @@ function UserPanelChangePassword() {
               <div className="user-panel__password">
                 <input
                   className="edit__input"
-                  // type="text"
                   type={confirmPasswordInputType}
-                  value={editedUserConfirmPassword}
-                  onChange={(e) => setEditedUserConfirmPassword(e.target.value)}
+                  name="confirmPassword"
+                  value={form.values.confirmPassword}
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
                 />
                 <span className="user-panel__password-icon" onClick={confirmPasswordInputHandler} ><Icon icon={confirmPasswordIcon} size={25} /></span>
               </div>
-              {errorsForChangeUserConfirmPassword.confirmPassword && <span className="error-message">{errorsForChangeUserConfirmPassword.confirmPassword}</span>}
+              <div className="error-message">
+                {form.errors.confirmPassword && form.touched.confirmPassword && form.errors.confirmPassword}
+              </div>
             </div>
 
           </div>
         </div>
 
-        <button className="edit__btn" type="submit" onClick={changeUserPasswordHandler}>
-          ذخیره تغییرات
+        <button className="edit__btn" type="submit">
+          {form.isSubmitting ? "در حال ارسال ..." : "ذخیره تغییرات"}
         </button>
       </form>
     </div>
