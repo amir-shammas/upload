@@ -115,7 +115,7 @@ const UserPanelUpdateAvatar = () => {
                 <div className="row">
 
                     <div className="col-12">
-                        <label className="edit__label">عکس پروفایل *</label>
+                        <label className="edit__label">عکس پروفایل جدید را انتخاب کنید : </label>
                         <input
                             className="edit__input"
                             type="file"

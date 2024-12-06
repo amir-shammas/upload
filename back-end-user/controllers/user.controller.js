@@ -228,7 +228,87 @@ exports.updateAvatar = async (req, res, next) => {
     return res.status(200).json({status: 200, message: "avatar updated successfully !", data: user});
 
   } catch (error) {
-    console.log(error);
-    next(error);
+      console.log(error);
+      next(error);
   }
+};
+
+
+exports.uploadResume = async (req, res, next) => {
+  
+  const id = String(req.user._id);
+
+  const user = await userModel.findById(id);
+
+  let fileName = "";
+
+  if(req.files === null){
+
+    return res.json({ error: "please select a file !" });
+
+  }else{
+
+    const file = req.files.file;
+    const fileSize = file.size;
+    const ext = path.extname(file.name);
+    let dateNow = Math.round(Date.now());
+    fileName = dateNow + ext;
+    const allowedType = [".pdf"];
+
+    if(!allowedType.includes(ext.toLowerCase())){
+      return res.json("only pdf files are accepted !");
+    }
+
+    if(fileSize > 3000000) return res.json("file size must be lower than 3 MB !");
+    
+    if(user.resumeName){
+      const filePath = `./public/resumes/${user.resumeName}`;
+      fs.unlinkSync(filePath);
+    }
+
+    file.mv(`./public/resumes/${fileName}`, (err)=> {
+      if(err) return res.json({msg: err.message})
+    })
+  
+  }
+
+  const url = `http://localhost:4000/resumes/${fileName}`
+
+  try {
+
+    const user = await userModel.findByIdAndUpdate(
+      id,
+      {
+        resumeName: fileName,
+        resumeUrl: url,
+      },
+      { new: true },
+    );
+
+    if (!user) {
+      return res.status(404).json("user not found !");
+    }
+
+    return res.status(200).json({status: 200, message: "resume uploaded successfully !", data: user});
+
+  } catch (error) {
+      console.log(error);
+      next(error);
+  }
+};
+
+
+exports.downloadResume = async (req, res, next) => {
+  const id = String(req.user._id);
+  const user = await userModel.findById(id);
+  if(!user.resumeName){
+    return res.status(404).json("file not found !");
+  }
+  const filePath = `./public/resumes/${user.resumeName}`;
+  res.download(filePath, (err) => {
+    if (err) {
+        console.error('Error downloading file:', err);
+        res.status(500).send('Error downloading file');
+    }
+  });
 };

@@ -49,8 +49,8 @@ export default function UserPanelSidebar() {
           </li>
 
           <li className="sidebar__item">
-            <Link className={location.pathname==="/my-account/upload-resume" ? "sidebar__link active" : "sidebar__link"} to="upload-resume">
-              بارگزاری رزومه
+            <Link className={location.pathname==="/my-account/upload-resume" ? "sidebar__link active" : "sidebar__link"} to="resume">
+              رزومه
             </Link>
           </li>
           

@@ -30,4 +30,12 @@ router.route("/update-avatar")
  .patch(isAuthenticated, isNotBan, isEmailVerified, userController.updateAvatar);
 
 
+router.route("/upload-resume")
+ .patch(isAuthenticated, isNotBan, isEmailVerified, userController.uploadResume);
+
+
+router.route("/download-resume")
+ .get(isAuthenticated, isNotBan, isEmailVerified, userController.downloadResume);
+
+
 module.exports = router;
