@@ -108,6 +108,7 @@ const UserPanelResume = () => {
 
 
   const downloadResumeHandler = async () => {
+    
     if(authContext.userInfos.isBan){
       return swal({
           title: "دسترسی شما محدود شده است",

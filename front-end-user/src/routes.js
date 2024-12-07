@@ -11,7 +11,7 @@ import UserPanelSendLinkForVerifyEmail from "./pages/UserPanel/UserPanelSendLink
 import UserPanelVerifyEmail from "./pages/UserPanel/UserPanelVerifyEmail/UserPanelVerifyEmail";
 import UserPanelEditAccount from "./pages/UserPanel/UserPanelEditAccount/UserPanelEditAccount";
 import UserPanelChangePassword from "./pages/UserPanel/UserPanelChangePassword/UserPanelChangePassword";
-import UserPanelUpdateAvatar from "./pages/UserPanel/UserPanelUpdateAvatar/UserPanelUpdateAvatar";
+import UserPanelAvatar from "./pages/UserPanel/UserPanelAvatar/UserPanelAvatar";
 import UserPanelResume from "./pages/UserPanel/UserPanelResume/UserPanelResume";
 
 
@@ -36,7 +36,7 @@ const routes = [
       {path: "verify-email/:token", element: <UserPanelVerifyEmail />},
       {path: "edit-account", element: <UserPanelEditAccount />},
       {path: "change-password", element: <UserPanelChangePassword />},
-      {path: "update-avatar", element: <UserPanelUpdateAvatar />},
+      {path: "avatar", element: <UserPanelAvatar />},
       {path: "resume", element: <UserPanelResume />},
     ],
    },

@@ -26,8 +26,16 @@ router.route("/verify-email/:token")
  .post(isAuthenticated, isNotBan, userController.verifyEmail);
 
 
-router.route("/update-avatar")
- .patch(isAuthenticated, isNotBan, isEmailVerified, userController.updateAvatar);
+router.route("/upload-avatar")
+ .patch(isAuthenticated, isNotBan, isEmailVerified, userController.uploadAvatar);
+
+
+router.route("/download-avatar")
+ .get(isAuthenticated, isNotBan, isEmailVerified, userController.downloadAvatar);
+
+
+router.route("/delete-avatar")
+ .delete(isAuthenticated, isNotBan, isEmailVerified, userController.deleteAvatar);
 
 
 router.route("/upload-resume")

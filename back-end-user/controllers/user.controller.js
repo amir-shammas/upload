@@ -170,7 +170,7 @@ exports.verifyEmail = async (req, res, next) => {
 };
 
 
-exports.updateAvatar = async (req, res, next) => {
+exports.uploadAvatar = async (req, res, next) => {
   
   const id = String(req.user._id);
 
@@ -226,6 +226,74 @@ exports.updateAvatar = async (req, res, next) => {
     }
 
     return res.status(200).json({status: 200, message: "avatar updated successfully !", data: user});
+
+  } catch (error) {
+      console.log(error);
+      next(error);
+  }
+};
+
+
+exports.downloadAvatar = async (req, res, next) => {
+
+  const id = String(req.user._id);
+
+  const user = await userModel.findById(id);
+
+  if(!user.avatarName){
+    return res.status(404).json("file not found !");
+  }
+
+  const filePath = `./public/images/avatars/${user.avatarName}`;
+
+  try{
+
+    await res.download(filePath, (err) => {
+
+      if (err) {
+          console.error('Error downloading file:', err);
+          res.status(500).send('Error downloading file');
+      }
+    });
+
+  }catch(error){
+    console.log(error);
+    next(error);
+  }
+  
+};
+
+
+exports.deleteAvatar = async (req, res, next) => {
+  
+  const id = String(req.user._id);
+
+  const user = await userModel.findById(id);
+
+  if (!user) {
+    return res.status(404).json("user not found !");
+  }
+
+  if(!user.avatarName){
+    return res.json({ error: "عکسی انتخاب نکردید" });
+  }
+
+  const filePath = `./public/images/avatars/${user.avatarName}`;
+
+  fs.unlinkSync(filePath);
+
+  try {
+
+    const user = await userModel.findByIdAndUpdate(
+      id,
+      {
+        avatarName: null,
+        avatarUrl: null,
+      },
+      { new: true }, // This option returns the updated document
+    );
+
+    return res.status(200).json({status: 200, message: "avatar deleted successfully !", data: user});
 
   } catch (error) {
       console.log(error);
@@ -299,16 +367,30 @@ exports.uploadResume = async (req, res, next) => {
 
 
 exports.downloadResume = async (req, res, next) => {
+
   const id = String(req.user._id);
+
   const user = await userModel.findById(id);
+
   if(!user.resumeName){
     return res.status(404).json("file not found !");
   }
+
   const filePath = `./public/resumes/${user.resumeName}`;
-  res.download(filePath, (err) => {
-    if (err) {
-        console.error('Error downloading file:', err);
-        res.status(500).send('Error downloading file');
-    }
-  });
+
+  try{
+
+    await res.download(filePath, (err) => {
+
+      if (err) {
+          console.error('Error downloading file:', err);
+          res.status(500).send('Error downloading file');
+      }
+    });
+
+  }catch(error){
+    console.log(error);
+    next(error);
+  }
+  
 };
