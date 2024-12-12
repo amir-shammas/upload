@@ -432,3 +432,32 @@ exports.deleteResume = async (req, res, next) => {
       next(error);
   }
 };
+
+
+exports.updateBio = async (req, res, next) => {
+  
+  try{
+
+    const { bio } = req.body;
+
+    const id = String(req.user._id);
+
+    const user = await userModel.findByIdAndUpdate(
+      id,
+      {
+        bio,
+      },
+      { new: true }, // This option returns the updated document
+    );
+
+    if (!user) {
+      return res.status(404).json("user not found !");
+    }
+
+    return res.status(200).json({status: 200, message: "bio updated successfully !", data: user});
+
+  }catch(error){
+    next(error);
+  }
+
+};

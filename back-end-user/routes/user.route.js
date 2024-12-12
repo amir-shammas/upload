@@ -50,4 +50,8 @@ router.route("/delete-resume")
  .delete(isAuthenticated, isNotBan, isEmailVerified, userController.deleteResume);
 
 
+router.route("/update-bio")
+ .patch(isAuthenticated, isNotBan, isEmailVerified, userController.updateBio);
+
+
 module.exports = router;

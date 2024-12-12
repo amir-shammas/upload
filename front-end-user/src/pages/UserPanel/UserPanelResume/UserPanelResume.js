@@ -337,7 +337,6 @@ const UserPanelResume = () => {
           </button>
         </div>
 
-        {/* Modal for displaying the current resume */}
         <ShowResumeModal
           isOpen={isOpenShowResumeModal}
           onClose={closeShowResumeModal}

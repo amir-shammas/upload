@@ -13,6 +13,7 @@ import UserPanelEditAccount from "./pages/UserPanel/UserPanelEditAccount/UserPan
 import UserPanelChangePassword from "./pages/UserPanel/UserPanelChangePassword/UserPanelChangePassword";
 import UserPanelAvatar from "./pages/UserPanel/UserPanelAvatar/UserPanelAvatar";
 import UserPanelResume from "./pages/UserPanel/UserPanelResume/UserPanelResume";
+import UserPanelBio from "./pages/UserPanel/UserPanelBio/UserPanelBio";
 
 
 const routes = [
@@ -38,6 +39,7 @@ const routes = [
       {path: "change-password", element: <UserPanelChangePassword />},
       {path: "avatar", element: <UserPanelAvatar />},
       {path: "resume", element: <UserPanelResume />},
+      {path: "bio", element: <UserPanelBio />},
     ],
    },
 

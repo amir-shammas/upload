@@ -53,6 +53,12 @@ export default function UserPanelSidebar() {
               رزومه
             </Link>
           </li>
+
+          <li className="sidebar__item">
+            <Link className={location.pathname==="/my-account/bio" ? "sidebar__link active" : "sidebar__link"} to="bio">
+              بیوگرافی
+            </Link>
+          </li>
           
         </ul>
       </div>
