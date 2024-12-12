@@ -46,14 +46,6 @@ function UserPanelChangePassword() {
   const [currentPasswordIcon, setCurrentPasswordIcon] = useState(eyeOff);
   const [confirmPasswordInputType, setConfirmPasswordInputType] = useState("password");
   const [confirmPasswordIcon, setConfirmPasswordIcon] = useState(eyeOff);
-  
-  // const [editedUserCurrentPassword, setEditedUserCurrentPassword] = useState("");
-  // const [editedUserPassword, setEditedUserPassword] = useState("");
-  // const [editedUserConfirmPassword, setEditedUserConfirmPassword] = useState("");
-
-  // const [errorsForCurrentPassword, setErrorsForCurrentPassword] = useState({});
-  // const [errorsForChangeUserPassword, setErrorsForChangeUserPassword] = useState({});
-  // const [errorsForChangeUserConfirmPassword, setErrorsForChangeUserConfirmPassword] = useState({});
 
   const passwordInputHandler = () => {
     if(passwordInputType === "password"){
@@ -84,31 +76,6 @@ function UserPanelChangePassword() {
       setConfirmPasswordIcon(eyeOff);
     }
   }
-
-  // const validateInputsForChangeUserPassword = async () => {
-  //   try {
-  //     await validationSchemaForChangeUserPassword.validate({
-  //       currentPassword: editedUserCurrentPassword,
-  //       password: editedUserPassword,
-  //       confirmPassword: editedUserConfirmPassword,
-  //     });
-  //     setErrorsForCurrentPassword({}); // Clear errors if validation passes
-  //     setErrorsForChangeUserPassword({}); // Clear errors if validation passes
-  //     setErrorsForChangeUserConfirmPassword({}); // Clear errors if validation passes
-  //     return true; // Validation passed
-  //   } catch (err) {
-  //     setErrorsForCurrentPassword({
-  //       currentPassword: err.path === 'currentPassword' ? err.message : undefined,
-  //     });
-  //     setErrorsForChangeUserPassword({
-  //       password: err.path === 'password' ? err.message : undefined,
-  //     });
-  //     setErrorsForChangeUserConfirmPassword({
-  //       confirmPassword: err.path === 'confirmPassword' ? err.message : undefined,
-  //     });
-  //     return false; // Validation failed
-  //   }
-  // }
 
   const form = useFormik({
 
@@ -191,11 +158,6 @@ function UserPanelChangePassword() {
                   buttons: "باشه",
                 })
               })
-            // .then(() => {
-            //   setEditedUserCurrentPassword("");
-            //   setEditedUserPassword("");
-            //   setEditedUserConfirmPassword("");
-            // })
           }
         })
 

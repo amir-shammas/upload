@@ -43,13 +43,13 @@ export default function UserPanelSidebar() {
           </li>
 
           <li className="sidebar__item">
-            <Link className={location.pathname==="/my-account/update-avatar" ? "sidebar__link active" : "sidebar__link"} to="avatar">
+            <Link className={location.pathname==="/my-account/avatar" ? "sidebar__link active" : "sidebar__link"} to="avatar">
               عکس پروفایل
             </Link>
           </li>
 
           <li className="sidebar__item">
-            <Link className={location.pathname==="/my-account/upload-resume" ? "sidebar__link active" : "sidebar__link"} to="resume">
+            <Link className={location.pathname==="/my-account/resume" ? "sidebar__link active" : "sidebar__link"} to="resume">
               رزومه
             </Link>
           </li>
