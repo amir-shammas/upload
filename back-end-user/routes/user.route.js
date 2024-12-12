@@ -46,4 +46,8 @@ router.route("/download-resume")
  .get(isAuthenticated, isNotBan, isEmailVerified, userController.downloadResume);
 
 
+router.route("/delete-resume")
+ .delete(isAuthenticated, isNotBan, isEmailVerified, userController.deleteResume);
+
+
 module.exports = router;

@@ -1,5 +1,5 @@
 import React from 'react';
-import './Modal.css'; // You can style your modal here
+import './ShowAvatarModal.css'; // You can style your modal here
 
 const Modal = ({ isOpen, onClose, imageUrl }) => {
   if (!isOpen) return null;

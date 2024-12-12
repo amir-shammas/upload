@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import swal from "sweetalert";
 import AuthContext from "../../../context/authContext";
-import Modal from "../../../Components/Modal/Modal";
+import ShowAvatarModal from "../../../Components/Modals/ShowAvatarModal/ShowAvatarModal";
 
 import "./UserPanelAvatar.css";
 
@@ -34,7 +34,7 @@ const UserPanelAvatar = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to manage modal visibility
+  const [isOpenShowAvatarModal, setIsOpenShowAvatarModal] = useState(false); // State to manage modal visibility
 
   const [currentAvatarUrl, setCurrentAvatarUrl] = useState(""); // State to store the current avatar URL
 
@@ -213,7 +213,7 @@ const UserPanelAvatar = () => {
 
     setCurrentAvatarUrl(authContext.userInfos.avatarUrl); // Get the current avatar URL
 
-    setIsModalOpen(true); // Open the modal
+    setIsOpenShowAvatarModal(true); // Open the modal
   };
 
 
@@ -284,10 +284,10 @@ const UserPanelAvatar = () => {
   };
 
 
-  const closeModal = () => {
-    setIsModalOpen(false); // Close the modal
+  const closeShowAvatarModal = () => {
+    setIsOpenShowAvatarModal(false); // Close the modal
   };
-  
+
 
   return (
     <div className="edit">
@@ -344,11 +344,12 @@ const UserPanelAvatar = () => {
       </div>
 
       {/* Modal for displaying the current avatar */}
-      <Modal
-        isOpen={isModalOpen}
-        onClose={closeModal}
+      <ShowAvatarModal
+        isOpen={isOpenShowAvatarModal}
+        onClose={closeShowAvatarModal}
         imageUrl={currentAvatarUrl}
       />
+      
     </div>
   );
 };

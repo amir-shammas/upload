@@ -394,3 +394,41 @@ exports.downloadResume = async (req, res, next) => {
   }
   
 };
+
+
+exports.deleteResume = async (req, res, next) => {
+  
+  const id = String(req.user._id);
+
+  const user = await userModel.findById(id);
+
+  if (!user) {
+    return res.status(404).json("user not found !");
+  }
+
+  if(!user.resumeName){
+    return res.json({ error: "رزومه وجود ندارد"});
+  }
+
+  const filePath = `./public/resumes/${user.resumeName}`;
+
+  fs.unlinkSync(filePath);
+
+  try {
+
+    const user = await userModel.findByIdAndUpdate(
+      id,
+      {
+        resumeName: null,
+        resumeUrl: null,
+      },
+      { new: true }, // This option returns the updated document
+    );
+
+    return res.status(200).json({status: 200, message: "resume deleted successfully !", data: user});
+
+  } catch (error) {
+      console.log(error);
+      next(error);
+  }
+};

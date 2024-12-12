@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import swal from "sweetalert";
 import AuthContext from "../../../context/authContext";
+import ShowResumeModal from "../../../Components/Modals/ShowResumeModal/ShowResumeModal";
 
 import "./UserPanelResume.css"
 
@@ -27,6 +28,10 @@ const UserPanelResume = () => {
   const authContext = useContext(AuthContext);
 
   const [loading, setLoading] = useState(false);
+
+  const [isOpenShowResumeModal, setIsOpenShowResumeModal] = useState(false);
+
+  const [currentResumeUrl, setCurrentResumeUrl] = useState("");
 
   const form = useFormik({
 
@@ -175,6 +180,110 @@ const UserPanelResume = () => {
   };
 
 
+  const showResumeHandler = async () => {
+
+    if (authContext.userInfos.isBan) {
+      return swal({
+        title: "دسترسی شما محدود شده است",
+        icon: "error",
+        buttons: "متوجه شدم",
+      });
+    }
+
+    if (!authContext.userInfos.isEmailVerified) {
+      return swal({
+        title: "لطفا ابتدا ایمیل خود را تایید کنید",
+        icon: "error",
+        buttons: "متوجه شدم",
+      });
+    }
+
+    if (!authContext.userInfos.resumeName) {
+      return swal({
+        title: "هنوز رزومه آپلود نشده است",
+        icon: "warning",
+        buttons: "متوجه شدم",
+      });
+    }
+
+    setCurrentResumeUrl(authContext.userInfos.resumeUrl);
+
+    setIsOpenShowResumeModal(true);
+  }
+
+
+  const deleteResumeHandler = async () => {
+
+    if (authContext.userInfos.isBan) {
+      return swal({
+        title: "دسترسی شما محدود شده است",
+        icon: "error",
+        buttons: "متوجه شدم",
+      });
+    }
+
+    if (!authContext.userInfos.isEmailVerified) {
+      return swal({
+        title: "لطفا ابتدا ایمیل خود را تایید کنید",
+        icon: "error",
+        buttons: "متوجه شدم",
+      });
+    }
+
+    if (!authContext.userInfos.resumeName) {
+      return swal({
+        title: "هنوز رزومه آپلود نشده است",
+        icon: "warning",
+        buttons: "متوجه شدم",
+      });
+    }
+
+    try {
+      await swal({
+        title: "رزومه حذف شود؟",
+        icon: "warning",
+        buttons: ["خیر", "بله"],
+      }).then(async (result) => {
+        if (result) {
+          await fetch("http://localhost:4000/users/delete-resume", {
+            method: "delete",
+            headers: {
+              Authorization: `Bearer ${loggedInUser.token}`,
+            },
+          })
+            .then((res) => {
+              if (!res.ok) throw new Error("Failed to delete resume !");
+              return res.json();
+            })
+            .then((result) => {
+              // console.log(result);
+              authContext.setUserInfos(result.data);
+            })
+            .then(() => {
+              swal({
+                title: "حذف رزومه با موفقیت انجام شد",
+                icon: "success",
+                buttons: "باشه",
+              });
+            });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      swal({
+        title: "خطایی در حذف رزومه رخ داده است",
+        icon: "error",
+        buttons: "تلاش دوباره",
+      });
+    }
+  };
+
+
+  const closeShowResumeModal = () => {
+    setIsOpenShowResumeModal(false);
+  };
+
+
   return (
     <div className="edit">
         <form className="edit__form" onSubmit={form.handleSubmit}>
@@ -210,7 +319,30 @@ const UserPanelResume = () => {
 
         </form>
 
-        <button className="edit__btn" onClick={downloadResumeHandler}>دانلود رزومه فعلی</button>
+        <div>
+          <button className="edit__btn" onClick={downloadResumeHandler}>
+            دانلود رزومه فعلی
+          </button>
+        </div>
+
+        <div>
+          <button className="edit__btn" onClick={showResumeHandler}>
+            مشاهده رزومه فعلی
+          </button>
+        </div>
+
+        <div>
+          <button className="edit__btn" onClick={deleteResumeHandler}>
+            حذف رزومه فعلی
+          </button>
+        </div>
+
+        {/* Modal for displaying the current resume */}
+        <ShowResumeModal
+          isOpen={isOpenShowResumeModal}
+          onClose={closeShowResumeModal}
+          resumeUrl={currentResumeUrl}
+        />
 
     </div>
     );  
