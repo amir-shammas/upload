@@ -7,6 +7,7 @@ const fileUpload = require("express-fileupload");
 //* routes import
 const authRoutes = require("./routes/auth.route");
 const userRoutes = require("./routes/user.route");
+const postRoutes = require("./routes/post.route");
 
 
 const app = express();
@@ -29,6 +30,7 @@ app.use(express.static("public"));
 //* Routes
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
+app.use("/posts", postRoutes);
 
 
 //* Error Controller

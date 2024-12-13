@@ -62,6 +62,7 @@ exports.register = async (req, res, next) => {
   }
 };
 
+
 exports.login = async (req, res, next) => {
   try {
     const { identifier, password } = req.body;
@@ -96,9 +97,17 @@ exports.login = async (req, res, next) => {
   }
 };
 
+
 exports.getMe = async (req, res, next) => {
   try {
-    return res.json({ ...req.user });
+
+    // return res.json({ ...req.user });
+
+    const user = await userModel.findById(req.user._id)
+      .populate("posts");
+      
+    return res.json(user);
+
   } catch (error) {
     next(error);
   }

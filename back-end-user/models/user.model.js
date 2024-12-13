@@ -55,6 +55,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    posts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+      }
+    ],   // Reference to Post
   },
   { timestamps: true }
 );
@@ -86,5 +92,4 @@ userSchema.statics.changePasswordValidation_ByUser = function (body) {
 };
 
 
-const model = mongoose.model("User", userSchema);
-module.exports = model;
+module.exports = mongoose.model("User", userSchema);

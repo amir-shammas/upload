@@ -119,7 +119,7 @@ export default function Register() {
 
   return (
     <>
-      <Topbar />
+      {/* <Topbar /> */}
       <Navbar />
 
       <section className="login-register">

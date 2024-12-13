@@ -11,7 +11,7 @@ function UserPanelLayout() {
 
     return (
         <>
-          <Topbar />
+          {/* <Topbar /> */}
           <Navbar />
   
           <section className="content">

@@ -48,28 +48,16 @@ export default function Navbar() {
                   صفحه اصلی
                 </Link>
               </li>
-
-              <li className="main-header__item">
-                <a href="#" className="main-header__link">
-                  فرانت اند
-                </a>
-              </li>
-
-              <li className="main-header__item">
-                <a href="#" className="main-header__link">
-                  مهارت های نرم
-                </a>
-              </li>
             </ul>
           </div>
 
           <div className="main-header__left">
-            <a href="#" className="main-header__search-btn">
+            {/* <a href="#" className="main-header__search-btn">
               <i className="fas fa-search main-header__search-icon"></i>
             </a>
             <a href="#" className="main-header__cart-btn">
               <i className="fas fa-shopping-cart main-header__cart-icon"></i>
-            </a>
+            </a> */}
 
             {authContext.isLoggedIn === true ? (
               <>

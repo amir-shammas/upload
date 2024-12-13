@@ -119,7 +119,8 @@ function UserPanelBio() {
                             <textarea
                                 className="edit__input bio"
                                 name="bio"
-                                value={form.values.bio}
+                                // value={form.values.bio}
+                                value={form.values.bio ? form.values.bio : ""}
                                 onChange={form.handleChange}
                                 onBlur={form.handleBlur}
                                 rows="4"
