@@ -106,14 +106,26 @@ function UserPanelBio() {
                     <div className="row">
                         <div className="col-12">
                             <label className="edit__label">بیوگرافی *</label>
-                            <input
+
+                            {/* <input
                                 className="edit__input"
                                 type="text"
                                 name="bio"
                                 value={form.values.bio}
                                 onChange={form.handleChange}
                                 onBlur={form.handleBlur}
+                            /> */}
+
+                            <textarea
+                                className="edit__input bio"
+                                name="bio"
+                                value={form.values.bio}
+                                onChange={form.handleChange}
+                                onBlur={form.handleBlur}
+                                rows="4"
+                                placeholder="بیوگرافی خود را بنویسید ... "
                             />
+
                         </div>
                     </div>
                 </div>
