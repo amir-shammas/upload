@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { createNewPostValidator , getOnePostValidator , getMyPostValidator , updateMyPostValidator , deleteMyPostValidator } = require("./../validators/post.validator");
 
 
 const postSchema = new mongoose.Schema(
@@ -20,6 +21,31 @@ const postSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+
+postSchema.statics.createNewPostValidation = function (body) {
+  return createNewPostValidator.validate(body, { abortEarly: false });
+};
+
+
+postSchema.statics.getOnePostValidation = function (body) {
+  return getOnePostValidator.validate(body, { abortEarly: false });
+};
+
+
+postSchema.statics.getMyPostValidation = function (body) {
+  return getMyPostValidator.validate(body, { abortEarly: false });
+};
+
+
+postSchema.statics.updateMyPostValidation = function (body) {
+  return updateMyPostValidator.validate(body, { abortEarly: false });
+};
+
+
+postSchema.statics.deleteMyPostValidation = function (body) {
+  return deleteMyPostValidator.validate(body, { abortEarly: false });
+};
 
 
 module.exports = mongoose.model("Post", postSchema);

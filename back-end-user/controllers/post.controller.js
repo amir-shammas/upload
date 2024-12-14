@@ -3,20 +3,29 @@ const postModel = require("./../models/post.model");
 
 
 exports.createNewPost = async (req, res, next) => {
-    const { content } = req.body;
-    const userId = String(req.user._id);
     try{
+        const { content } = req.body;
+        const userId = String(req.user._id);
+        await postModel.createNewPostValidation(req.body).catch((err) => {
+            err.statusCode = 400;
+            throw err;
+        });
         const newPost = await postModel.create({
             content,
             user: userId,
         });
+        if(!newPost){
+            return res.status(400).json({status: 400, message: "fail to create new post !"});
+        }
         // Update the user to include the new post ID
-        await userModel.findByIdAndUpdate(userId, {
+        const updatedUser = await userModel.findByIdAndUpdate(userId, {
             $push: { posts: newPost._id } // Push the new post ID into the user's posts array
         });
-        return res.status(201).json({ message: "post created successfully !", newPost });
+        if(!updatedUser){
+            return res.status(404).json({status: 404, message: "fail to update user !"});
+        }
+        return res.status(201).json({status: 201, message: "post created successfully !", newPost });
     }catch(error){
-        console.log(error);
         next(error);
     }
 };
@@ -25,9 +34,11 @@ exports.createNewPost = async (req, res, next) => {
 exports.getAllPosts = async (req, res, next) => {
     try{
         const allPosts = await postModel.find().populate("user");
-        return res.json({message: "get all posts successfully", allPosts});
+        if(!allPosts){
+            return res.status(404).json({status: 404, message: "fail to get all posts !"});
+        }
+        return res.status(200).json({status: 200, message: "get all posts successfully !", allPosts});
     }catch(error){
-        console.log(error);
         next(error);
     }
 };
@@ -36,10 +47,16 @@ exports.getAllPosts = async (req, res, next) => {
 exports.getOnePost = async (req, res, next) => {
     try{
         const { id } = req.params;
-        const post = await postModel.findById(id).populate("user");
-        return res.json({message: "get one post successfully", post});
+        await postModel.getOnePostValidation({ id }).catch((err) => {
+            err.statusCode = 400;
+            throw err;
+        });
+        const onePost = await postModel.findById(id).populate("user");
+        if(!onePost){
+            return res.status(404).json({status: 404, message: "fail to get one post !"});
+        }
+        return res.status(200).json({status: 200, message: "get one post successfully !", onePost});
     }catch(error){
-        console.log(error);
         next(error);
     }
 };
@@ -48,9 +65,11 @@ exports.getOnePost = async (req, res, next) => {
 exports.getMyPosts = async (req, res, next) => {
     try{
         const myPosts = await postModel.find({user: req.user._id}).populate("user");
-        return res.json({message: "get my posts successfully", myPosts});
+        if (!myPosts) {
+            return res.status(404).json({status: 404, message: "fail to get my posts !"});
+        }
+        return res.status(200).json({status: 200, message: "get my posts successfully !", myPosts});
     }catch(error){
-        console.log(error);
         next(error);
     }
 };
@@ -59,10 +78,16 @@ exports.getMyPosts = async (req, res, next) => {
 exports.getMyPost = async (req, res, next) => {
     try{
         const { id } = req.params;
-        const post = await postModel.findById(id).populate("user");
-        return res.json({message: "get my post successfully", post});
+        await postModel.getMyPostValidation({ id }).catch((err) => {
+            err.statusCode = 400;
+            throw err;
+        });
+        const myPost = await postModel.findById(id).populate("user");
+        if (!myPost) {
+            return res.status(404).json({status: 404, message: "fail to get my post !"});
+        }
+        return res.status(200).json({status: 200, message: "get my post successfully !", myPost});
     }catch(error){
-        console.log(error);
         next(error);
     }
 };
@@ -72,19 +97,22 @@ exports.updateMyPost = async (req, res, next) => {
   try{
     const { content } = req.body;
     const { id } = req.params;
-    const post = await postModel.findByIdAndUpdate(
+    await postModel.updateMyPostValidation({ id , content }).catch((err) => {
+        err.statusCode = 400;
+        throw err;
+    });
+    const updatedPost = await postModel.findByIdAndUpdate(
       id,
       {
         content,
       },
       { new: true },
     );
-    if (!post) {
-      return res.status(404).json("post not found !");
+    if (!updatedPost) {
+        return res.status(404).json({status: 404, message: "fail to update my post !"});
     }
-    return res.status(200).json({status: 200, message: "post updated successfully !", data: post});
+    return res.status(200).json({status: 200, message: "post updated successfully !", data: updatedPost});
   }catch(error){
-    console.log(error);
     next(error);
   }
 };
@@ -93,17 +121,23 @@ exports.updateMyPost = async (req, res, next) => {
 exports.deleteMyPost = async (req, res, next) => {
     try{
         const { id } = req.params;
-        const post = await postModel.findByIdAndDelete(
+        await postModel.deleteMyPostValidation({ id }).catch((err) => {
+            err.statusCode = 400;
+            throw err;
+        });
+        const deletedPost = await postModel.findByIdAndDelete(
             id,
         );
-        if (!post) {
-        return res.status(404).json("post not found !");
+        if (!deletedPost) {
+            return res.status(404).json({status: 404, message: "fail to delete my post !"});
         }
         // Remove the post ID from the user's posts array
-        await userModel.findByIdAndUpdate(post.user, { $pull: { posts: id } });
-        return res.status(200).json({status: 200, message: "post deleted successfully !", data: post});
+        const updatedUser = await userModel.findByIdAndUpdate(deletedPost.user, { $pull: { posts: id } });
+        if(!updatedUser){
+            return res.status(404).json({status: 404, message: "fail to update user !"});
+        }
+        return res.status(200).json({status: 200, message: "post deleted successfully !", data: deletedPost});
     }catch(error){
-        console.error(error);
         next(error);
     }
 };
