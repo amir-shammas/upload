@@ -62,6 +62,24 @@ exports.getOnePost = async (req, res, next) => {
 };
 
 
+exports.getOtherUserPosts = async (req, res, next) => {
+    try{
+        const { otherUserId } = req.params;
+        await postModel.getOtherUserPostsValidation({ otherUserId }).catch((err) => {
+            err.statusCode = 400;
+            throw err;
+        });
+        const otherUserPosts = await postModel.find({user: otherUserId}).populate("user");
+        if (!otherUserPosts) {
+            return res.status(404).json({status: 404, message: "fail to get other user posts !"});
+        }
+        return res.status(200).json({status: 200, message: "get other user posts successfully !", otherUserPosts});
+    }catch(error){
+        next(error);
+    }
+};
+
+
 exports.getMyPosts = async (req, res, next) => {
     try{
         const myPosts = await postModel.find({user: req.user._id}).populate("user");

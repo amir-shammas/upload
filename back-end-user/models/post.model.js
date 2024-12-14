@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { createNewPostValidator , getOnePostValidator , getMyPostValidator , updateMyPostValidator , deleteMyPostValidator } = require("./../validators/post.validator");
+const { createNewPostValidator , getOnePostValidator , getMyPostValidator , updateMyPostValidator , deleteMyPostValidator , getOtherUserPostsValidator } = require("./../validators/post.validator");
 
 
 const postSchema = new mongoose.Schema(
@@ -30,6 +30,11 @@ postSchema.statics.createNewPostValidation = function (body) {
 
 postSchema.statics.getOnePostValidation = function (body) {
   return getOnePostValidator.validate(body, { abortEarly: false });
+};
+
+
+postSchema.statics.getOtherUserPostsValidation = function (body) {
+  return getOtherUserPostsValidator.validate(body, { abortEarly: false });
 };
 
 

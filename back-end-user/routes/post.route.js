@@ -20,6 +20,10 @@ router.route("/get-one-post/:id")
  .get(postController.getOnePost);
 
 
+router.route("/get-other-user-posts/:otherUserId")
+ .get(postController.getOtherUserPosts);
+
+
 router.route("/get-my-posts")
  .get(isAuthenticated, isNotBan, isEmailVerified, postController.getMyPosts);
 

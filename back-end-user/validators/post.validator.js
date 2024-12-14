@@ -20,6 +20,15 @@ const getOnePostValidator = yup.object().shape({
 });
 
 
+const getOtherUserPostsValidator = yup.object().shape({
+  otherUserId: yup
+    .string("فقط فرمت رشته قابل قبول می باشد")
+    .transform(value => value.trim())
+    .required("شناسه کاربر مورد نظر الزامی است")
+    .matches(/^[0-9a-fA-F]{24}$/, "شناسه کاربر مورد نظر معتبر نیست"),
+});
+
+
 const getMyPostValidator = yup.object().shape({
     id: yup
       .string("فقط فرمت رشته قابل قبول می باشد")
@@ -59,4 +68,5 @@ module.exports = {
     getMyPostValidator,
     updateMyPostValidator,
     deleteMyPostValidator,
+    getOtherUserPostsValidator,
 };
