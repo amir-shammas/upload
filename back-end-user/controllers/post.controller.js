@@ -33,7 +33,7 @@ exports.createNewPost = async (req, res, next) => {
 
 exports.getAllPosts = async (req, res, next) => {
     try{
-        const allPosts = await postModel.find().populate("user");
+        const allPosts = await postModel.find().sort({createdAt: -1}).populate("user");
         if(!allPosts){
             return res.status(404).json({status: 404, message: "fail to get all posts !"});
         }
