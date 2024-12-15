@@ -69,7 +69,7 @@ exports.getOtherUserPosts = async (req, res, next) => {
             err.statusCode = 400;
             throw err;
         });
-        const otherUserPosts = await postModel.find({user: otherUserId}).populate("user");
+        const otherUserPosts = await postModel.find({user: otherUserId}).sort({createdAt: -1}).populate("user");
         if (!otherUserPosts) {
             return res.status(404).json({status: 404, message: "fail to get other user posts !"});
         }

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Header from "./../../../Components/User/Header/Header";
-import moment from 'jalali-moment';
+import jalalimoment from 'jalali-moment';
+import momenttimezone from "moment-timezone";
+import { Link } from "react-router-dom";
 
 import "./Index.css";
 
@@ -46,11 +48,11 @@ export default function Index() {
                 return (
                   <div key={post._id}>
                     <div>
-                      <div>{post.user.username}</div>
-                      {/* <div>{post.createdAt}</div> */}
-                      {/* <div>{moment(post.createdAt, 'YYYY/MM/DD HH:mm').locale('fa').format('YYYY/MM/DD HH:mm')}</div> */}
-                      <div>{moment(post.createdAt, 'YYYY/MM/DD HH:mm').locale('fa').format('YYYY/MM/DD')}</div>
-                      <div>{moment(post.createdAt, 'YYYY/MM/DD HH:mm').locale('fa').format('HH:mm')}</div>
+                      {/* <div>{moment(post.createdAt).locale('fa').format('YYYY-MM-DD HH:mm:ss')}</div> */}
+                      {/* <div>{momenttimezone(post.createdAt).tz("Asia/Tehran").format('YYYY-MM-DD HH:mm:ss')}</div> */}
+                      {/* <div>کاربر {post.user.username} در تاریخ {jalalimoment(post.createdAt, 'YYYY/MM/DD HH:mm').locale('fa').format('YYYY/MM/DD')} ساعت {jalalimoment(post.createdAt, 'YYYY/MM/DD HH:mm').locale('fa').format('HH:mm')} نوشت : </div> */}
+                      {/* <div>کاربر {post.user.username} در تاریخ {jalalimoment(post.createdAt).locale("fa").format("YYYY/MM/DD")} ساعت {momenttimezone(post.createdAt).tz("Asia/Tehran").format("HH:mm")} نوشت : </div> */}
+                      <div>کاربر <Link className="btn btn-success link-to-profile" to="/user/profile" state={{ userId: post.user._id, username: post.user.username, userBio: post.user.bio, userCreatedAt: post.user.createdAt }}>{post.user.username}</Link> در تاریخ {jalalimoment(post.createdAt).locale("fa").format("YYYY/MM/DD")} ساعت {momenttimezone(post.createdAt).tz("Asia/Tehran").format("HH:mm")} نوشت : </div>
                       <div>{post.content}</div>
                     </div>
                     <hr />

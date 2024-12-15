@@ -14,6 +14,7 @@ import UserPanelChangePassword from "./pages/UserPanel/UserPanelChangePassword/U
 import UserPanelAvatar from "./pages/UserPanel/UserPanelAvatar/UserPanelAvatar";
 import UserPanelResume from "./pages/UserPanel/UserPanelResume/UserPanelResume";
 import UserPanelBio from "./pages/UserPanel/UserPanelBio/UserPanelBio";
+import Profile from "./pages/User/Profile/Profile";
 
 
 const routes = [
@@ -41,8 +42,8 @@ const routes = [
       {path: "resume", element: <UserPanelResume />},
       {path: "bio", element: <UserPanelBio />},
     ],
-   },
-
+  },
+  { path: "/user/profile", element: <Profile /> },
 ];
 
 export default routes;
