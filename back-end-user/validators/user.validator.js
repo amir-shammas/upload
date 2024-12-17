@@ -40,7 +40,17 @@ const changePasswordValidator_ByUser = yup.object().shape({
 });
 
 
+const getOtherUserProfileValidator = yup.object().shape({
+    otherUserId: yup
+      .string("فقط فرمت رشته قابل قبول می باشد")
+      .transform(value => value.trim())
+      .required("شناسه کاربر الزامی است")
+      .matches(/^[0-9a-fA-F]{24}$/, "شناسه کاربر معتبر نیست"),
+});
+
+
 module.exports = {
   updateValidator,
   changePasswordValidator_ByUser,
+  getOtherUserProfileValidator,
 };

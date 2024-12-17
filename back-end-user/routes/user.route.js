@@ -54,4 +54,8 @@ router.route("/update-bio")
  .patch(isAuthenticated, isNotBan, isEmailVerified, userController.updateBio);
 
 
+router.route("/get-other-user-profile-by-id/:otherUserId")
+ .get(userController.getOtherUserProfileById);
+
+
 module.exports = router;

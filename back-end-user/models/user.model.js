@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { registerValidator, loginValidator , forgetPasswordValidator , resetPasswordValidator } = require("./../validators/auth.validator");
-const { updateValidator , changePasswordValidator_ByUser } = require("./../validators/user.validator");
+const { updateValidator , changePasswordValidator_ByUser , getOtherUserProfileValidator } = require("./../validators/user.validator");
 
 
 const userSchema = new mongoose.Schema(
@@ -89,6 +89,10 @@ userSchema.statics.updateValidation = function (body) {
 //* change password By User
 userSchema.statics.changePasswordValidation_ByUser = function (body) {
   return changePasswordValidator_ByUser.validate(body, { abortEarly: false });
+};
+//* get other user profile
+userSchema.statics.getOtherUserProfileValidation = function (body) {
+  return getOtherUserProfileValidator.validate(body, { abortEarly: false });
 };
 
 

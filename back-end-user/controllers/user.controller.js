@@ -461,3 +461,27 @@ exports.updateBio = async (req, res, next) => {
   }
 
 };
+
+
+exports.getOtherUserProfileById = async (req, res, next) => {
+  try {
+    const { otherUserId } = req.params;
+    await userModel.getOtherUserProfileValidation({ otherUserId }).catch((err) => {
+        err.statusCode = 400;
+        throw err;
+    });
+    const otherUserProfile = await userModel.findById(otherUserId).populate("posts");
+    if(!otherUserProfile){
+      return res.status(404).json({status: 404, message: "fail to get other user profile !"});
+    }
+    const responseProfile = {
+      username: otherUserProfile.username,
+      bio: otherUserProfile.bio,
+      createdAt: otherUserProfile.createdAt,
+      posts: otherUserProfile.posts
+    };
+    return res.status(200).json({status: 200, message: "get other user profile successfully !", responseProfile});
+  } catch (error) {
+    next(error);
+  }
+};

@@ -43,7 +43,7 @@ const routes = [
       {path: "bio", element: <UserPanelBio />},
     ],
   },
-  { path: "/user/profile", element: <Profile /> },
+  { path: "/user/profile/:otherUserId", element: <Profile /> },
 ];
 
 export default routes;
