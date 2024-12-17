@@ -1,0 +1,20 @@
+.profile{
+    padding: 20px;
+}
+
+.follow-operations{
+    display: flex;
+    gap: 20px;
+}
+
+.avatar-image{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+.profile-title{
+    margin-right: 40px;
+}

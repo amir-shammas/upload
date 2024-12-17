@@ -70,13 +70,14 @@ export default function Index() {
                 return (
                   <div key={post._id}>
                     <div>
-                      {/* <div>{moment(post.createdAt).locale('fa').format('YYYY-MM-DD HH:mm:ss')}</div> */}
-                      {/* <div>{momenttimezone(post.createdAt).tz("Asia/Tehran").format('YYYY-MM-DD HH:mm:ss')}</div> */}
-                      {/* <div>کاربر {post.user.username} در تاریخ {jalalimoment(post.createdAt, 'YYYY/MM/DD HH:mm').locale('fa').format('YYYY/MM/DD')} ساعت {jalalimoment(post.createdAt, 'YYYY/MM/DD HH:mm').locale('fa').format('HH:mm')} نوشت : </div> */}
-                      {/* <div>کاربر {post.user.username} در تاریخ {jalalimoment(post.createdAt).locale("fa").format("YYYY/MM/DD")} ساعت {momenttimezone(post.createdAt).tz("Asia/Tehran").format("HH:mm")} نوشت : </div> */}
-                      {/* <div>کاربر <Link className="btn btn-success link-to-profile" to={`/user/profile/${post.user._id}`} state={{ userId: post.user._id, username: post.user.username, userBio: post.user.bio, userCreatedAt: post.user.createdAt }}>{post.user.username}</Link> در تاریخ {jalalimoment(post.createdAt).locale("fa").format("YYYY/MM/DD")} ساعت {momenttimezone(post.createdAt).tz("Asia/Tehran").format("HH:mm")} نوشت : </div> */}
-                      <div>کاربر <Link className="btn btn-success link-to-profile" to={`/user/profile/${post.user._id}`}>{post.user.username}</Link> در تاریخ {jalalimoment(post.createdAt).locale("fa").format("YYYY/MM/DD")} ساعت {momenttimezone(post.createdAt).tz("Asia/Tehran").format("HH:mm")} نوشت : </div>
+                      <div>کاربر <Link className="btn btn-success link-to-profile" to={`/get-other-user-profile/${post.user._id}`}>{post.user.username}</Link> در تاریخ {jalalimoment(post.createdAt).locale("fa").format("YYYY/MM/DD")} ساعت {momenttimezone(post.createdAt).tz("Asia/Tehran").format("HH:mm")} نوشت : </div>
                       <div>{post.content}</div>
+                      <div className="post-operations">
+                        <Link to={`/get-other-user-post/${post._id}`}> مشاهده جزییات پست </Link>
+                        <span> تعداد دفعات مشاهده جزییات پست </span>
+                        <button> لایک </button><span> تعداد لایک ها</span>
+                        <button> دیسلایک </button><span> تعداد دیسلایک ها</span>
+                      </div>
                     </div>
                     <hr />
                   </div>

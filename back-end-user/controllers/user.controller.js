@@ -478,7 +478,8 @@ exports.getOtherUserProfileById = async (req, res, next) => {
       username: otherUserProfile.username,
       bio: otherUserProfile.bio,
       createdAt: otherUserProfile.createdAt,
-      posts: otherUserProfile.posts
+      posts: otherUserProfile.posts,
+      avatarUrl: otherUserProfile.avatarUrl,
     };
     return res.status(200).json({status: 200, message: "get other user profile successfully !", responseProfile});
   } catch (error) {

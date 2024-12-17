@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
-// import { useLocation } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import jalalimoment from 'jalali-moment';
-import momenttimezone from "moment-timezone";
+import { Link } from "react-router-dom";
 
-import "./Profile.css";
+import "./OtherUserProfile.css";
 import Header from "../../../Components/User/Header/Header";
 
 
-function Profile() {
-    // const location = useLocation();
-    // const { userId, username, userBio, userCreatedAt } = location.state || {}; // Get the state passed from Index.js
+function OtherUserProfile() {
 
     const { otherUserId } = useParams();
 
@@ -46,32 +43,22 @@ function Profile() {
       <>
         <Header />
         <div className="profile">
-            <h1>پروفایل کاربر</h1>
+            <h1>
+                <img className="avatar-image" src={otherUserProfile.avatarUrl || "/images/default-avatar.png"} />
+                <span className="profile-title"> پروفایل کاربر </span>
+            </h1>
             <hr />
             {otherUserProfile ? (
                 <div>
                     <h2> نام کاربری : {otherUserProfile.username}</h2>
                     <h2> تاریخ عضویت : {jalalimoment(otherUserProfile.createdAt).locale("fa").format("YYYY/MM/DD")}</h2>
                     <h2> بیوگرافی : {otherUserProfile.bio ? otherUserProfile.bio : " بیوگرافی یافت نشد . "}</h2>
-
-                    <h2> پست ها : </h2>
-                    <div>
-                        {
-                            otherUserProfile.posts ?
-                            (otherUserProfile.posts.map((post) => {
-                                return (
-                                    <div key={post._id}>
-                                        <div>
-                                            <div>کاربر {otherUserProfile.username} در تاریخ {jalalimoment(post.createdAt).locale("fa").format("YYYY/MM/DD")} ساعت {momenttimezone(post.createdAt).tz("Asia/Tehran").format("HH:mm")} نوشت : </div>
-                                        </div>
-                                        <div>{post.content}</div>
-                                        <hr />
-                                    </div>
-                                )
-                            })) :
-                            <h1> پستی یافت نشد . </h1>
-                        }
-                    </div>
+                    <h2>
+                        <div className="follow-operations">
+                            <button> فالو </button><button> آنفالو </button><span> تعداد فالوورها </span>
+                        </div>
+                    </h2>
+                    <h2><Link to={`/get-other-user-posts/${otherUserId}`}> مشاهده همه پست های این کاربر </Link></h2>
                 </div>
             ) : (
                 <h1> پروفایل کاربر یافت نشد . </h1>
@@ -81,4 +68,4 @@ function Profile() {
     );
 }
 
-export default Profile;
+export default OtherUserProfile;

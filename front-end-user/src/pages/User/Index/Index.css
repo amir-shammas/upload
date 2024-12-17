@@ -5,3 +5,8 @@
 .link-to-profile{
     font-size: 16px;
 }
+
+.post-operations{
+    display: flex;
+    gap: 20px;
+}

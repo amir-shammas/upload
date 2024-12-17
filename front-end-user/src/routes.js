@@ -14,7 +14,9 @@ import UserPanelChangePassword from "./pages/UserPanel/UserPanelChangePassword/U
 import UserPanelAvatar from "./pages/UserPanel/UserPanelAvatar/UserPanelAvatar";
 import UserPanelResume from "./pages/UserPanel/UserPanelResume/UserPanelResume";
 import UserPanelBio from "./pages/UserPanel/UserPanelBio/UserPanelBio";
-import Profile from "./pages/User/Profile/Profile";
+import Profile from "./pages/User/OtherUserProfile/OtherUserProfile";
+import OtherUserPosts from "./pages/User/OtherUserPosts/OtherUserPosts";
+import OtherUserPost from "./pages/User/OtherUserPost/OtherUserPost";
 
 
 const routes = [
@@ -43,7 +45,9 @@ const routes = [
       {path: "bio", element: <UserPanelBio />},
     ],
   },
-  { path: "/user/profile/:otherUserId", element: <Profile /> },
+  { path: "/get-other-user-profile/:otherUserId", element: <Profile /> },
+  { path: "/get-other-user-posts/:otherUserId", element: <OtherUserPosts /> },
+  { path: "/get-other-user-post/:postId", element: <OtherUserPost /> },
 ];
 
 export default routes;
